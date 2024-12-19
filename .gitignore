@@ -75,6 +75,7 @@ instance/
 # Sphinx documentation
 docs/_build/
 docs/.build/
+tests/MNIST/
 
 # PyBuilder
 target/
@@ -168,3 +169,4 @@ test_outputs
 datasets
 
 *.gz
+*.pth
