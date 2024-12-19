@@ -1,6 +1,6 @@
 # H-DiT
 ## Report
-
+12.19 attention & mlp支持，torchrun双卡推理
 
 
 
