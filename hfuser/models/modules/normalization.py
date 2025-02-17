@@ -20,6 +20,15 @@ class CogVideoXLayerNormZero(nn.Module):
         self.linear = nn.Linear(conditioning_dim,6*embedding_dim,bias = bias)
         self.norm = nn.LayerNorm(embedding_dim,eps=eps,elementwise_affine=elementwise_affine)
 
+    def forward(
+        self,
+        hidden_states:torch.Tensor,
+        encoder_hidden_states:torch.Tensor,
+        temb:torch.Tensor,
+    ):
+        #TODO:
+        raise NotImplementedError("CogVideoXLayerNormZero forward 尚未实现")
+
 
 class AdaLayerNorm(nn.Module):
     def __init__(
@@ -45,3 +54,12 @@ class AdaLayerNorm(nn.Module):
         self.linear = nn.Linear(embedding_dim,output_dim)
         self.norm = nn.LayerNorm(output_dim // 2,norm_eps,norm_elementwise_affine)
 
+    def forward(
+        self,
+        x:torch.Tensor,
+        timestep:Optional[torch.Tensor]=None,
+        temb:Optional[torch.Tensor]=None,
+    ):
+        #TODO:
+        raise NotImplementedError("AdaLayerNorm forward 尚未实现")
+        

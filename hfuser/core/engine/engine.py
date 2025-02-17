@@ -10,10 +10,10 @@ import hfuser
 
 class hfuserEngine:
     """
-    worker 
+    learning from vllm
     """
     def __init__(self, config): 
-        self.config = config #获取config (model_path,pipeline_cls,num_gpus) 
+        self.config = config 
         self.parallel_worker_tasks = None
         self._init_worker(config.pipeline_cls) 
 
@@ -34,7 +34,7 @@ class hfuserEngine:
             self.worker_monitor = None
         else:
             #TODO: 
-            print("to do for multi process")
+            raise NotImplementedError("多进程功能尚未实现")
         print(f"create a driver_worker with pipeline_cls:{pipeline_cls}")
 
         #pp_clas实例化成pipeline返回给driver_worker,distri_init_method介入
@@ -42,8 +42,8 @@ class hfuserEngine:
         pipeline_cls=pipeline_cls, distributed_init_method=distributed_init_method
             )
 
-    def _create_pipeline(self, pipeline_cls, distributed_init_method=None):
-        hfuser.initialize(rank=0, world_size=self.config.num_gpus, init_method=distributed_init_method)
+    def _create_pipeline(self, pipeline_cls, rank=0, local_rank=0, distributed_init_method=None):
+        hfuser.initialize(rank=rank, world_size=self.config.num_gpus, init_method=distributed_init_method)
         pipeline = pipeline_cls(self.config) #调用__init__方法进行实例化
         return pipeline
     

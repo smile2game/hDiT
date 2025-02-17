@@ -24,7 +24,13 @@ class CogVideoXPatchEmbed(nn.Module):
         )
         self.text_proj = nn.Linear(text_embed_dim,embed_dim) 
 
-    def forward()
+    def forward(
+        self,
+        text_embeds:torch.Tensor,
+        image_embeds:torch.Tensor,
+    ):
+        #TODO:
+        raise NotImplementedError("CogVideoXPatchEmbed forward 尚未实现")
 
 
 
@@ -32,4 +38,9 @@ def apply_rotary_emb(x:torch.Tensor,
                      freqs_cis:Union[torch.Tensor,Tuple[torch.Tensor]], 
                      use_real:bool=True, 
                      use_real_unbind_dim:int=-1):
-    pass
+    #TODO:
+    raise NotImplementedError("apply_rotary_emb 尚未实现")
+
+
+
+

@@ -11,7 +11,7 @@ setup(
     # 你可以根据需要添加更多元数据
     author='smile2game',
     author_email='2426827419@qq.com',
-    description='hfuser for DiT parallelism',
+    description='hfuser for DiT parallelism',  
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     classifiers=[

@@ -26,7 +26,7 @@ class CogVideoXAttnProcessor2_0:
     def __init__(self):
         if not hasattr(F,"scaled_dot_product_attention"):
             raise ImportError("CogVideoXAttnProcessor requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
-
+        
 
 
 
@@ -148,6 +148,7 @@ class CogVideoXTransformer3DModel(ModelMixin,ConfigMixin):
         temporal_compression_ratio (`int`, defaults to `4`):
             The temporal compression ratio.
     """
+    _supports_gradient_checkpointing = True
     @register_to_config #decorator to inherit from ConfigMixin's __init__, send args to register_to_config
     def __init__(
         self,
@@ -182,7 +183,6 @@ class CogVideoXTransformer3DModel(ModelMixin,ConfigMixin):
         post_patch_height = sample_height // patch_size #60 // 2 = 30
         post_patch_width = sample_width // patch_size #90 // 2 = 45
         post_time_compression_frames = (sample_frames - 1) // temporal_compression_ratio + 1 #(49 - 1) // 4 + 1 = 13
-
         self.num_patches = post_patch_height * post_patch_width * post_time_compression_frames #30 * 45 * 13 = 17550
 
         #1. Patch embedding

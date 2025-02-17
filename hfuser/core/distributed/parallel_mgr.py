@@ -6,7 +6,6 @@ import torch.distributed as dist
 from colossalai.cluster.process_group_mesh import ProcessGroupMesh 
 from torch.distributed import ProcessGroup
 
-from hDiT.hfuser.utils.logging import init_logger
 
 class ParallelManager(ProcessGroupMesh):
     def __init__(self, dp_size, cp_size, sp_size):
@@ -40,9 +39,10 @@ class ParallelManager(ProcessGroupMesh):
         
 
 
-def initialize(rank=0, 
-               world_size=1, 
-               init_method=None):
+def initialize(
+        rank=0, 
+        world_size=1, 
+        init_method=None):
     if not dist.is_initialized():
         try:
             dist.destroy_process_group()

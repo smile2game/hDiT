@@ -25,10 +25,13 @@ from hfuser.schedulers.scheduling_ddim_cogvideox import CogVideoXDDIMScheduler #
 from hfuser.utils.utils import save_video, set_seed
 
 
-class CogVideoXConfig: #仅研究并行功能，只需传入model_path和num_gpus
+class CogVideoXConfig: 
     """
     config is to instanciate a 'CogVideoXPipeline'
-    config >> engine >> pipeline >> generate 
+    Only for parallel function,just get model_path,num_gpus
+
+    Call relation:
+        config >> engine >> pipeline >> generate 
     """
     def __init__(
             self, 
@@ -37,7 +40,7 @@ class CogVideoXConfig: #仅研究并行功能，只需传入model_path和num_gpu
             ):
         # ======= model =======
         self.model_path = model_path  
-        self.pipeline_cls = CogVideoXPipeline #这是个类,还没用实例化
+        self.pipeline_cls = CogVideoXPipeline 
         # ======= distributed =======
         self.num_gpus = num_gpus
 
@@ -59,31 +62,37 @@ class CogVideoXPipeline(hfuserPipeline):
                 dtype: torch.dtype = torch.bfloat16,
         ):
                 super().__init__() 
-                #instance varaibles
+                #instance self.varaibles
                 self._config = config
                 self._device = device
                 small_cogvideo = True
                 if small_cogvideo: #bfloat16 >> float16
                     dtype = torch.float16
                 self._dtype = dtype
+
                 #load models
+                #Transformer
                 if transformer is None:
                     transformer = CogVideoXTransformer3DModel.from_pretrained(
                         config.model_path, subfolder="transformer", torch_dtype=self._dtype
                     )
+                #vae
                 if vae is None:
                     vae = AutoencoderKLCogVideoX.from_pretrained(config.model_path, subfolder="vae", torch_dtype=self._dtype)
+                #tokenizer
                 if tokenizer is None:
                     tokenizer = T5Tokenizer.from_pretrained(config.model_path, subfolder = "tokenizer")
+                #text_encoder
                 if text_encoder is None:
                     text_encoder = T5EncoderModel.from_pretrained(config.model_path,subfolder = "text_encoder",torch_dtype=self._dtype)
+                #scheduler
                 if scheduler is None:
                      scheduler = CogVideoXDDIMScheduler.from_pretrained(config.model_path,subfolder="scheduler")
-                #注册modules
+                #register modules
                 self.register_modules(tokenizer=tokenizer,text_encoder=text_encoder,vae=vae,transformer=transformer,scheduler=scheduler)
-                #不使用cpu_offload以及vae_tilling
+                #No use cpu_offload and vae_tilling
                 self.set_eval_and_device(self._device,text_encoder,vae,transformer)
-
+                #vae_scale_factors
                 self.vae_scale_factor_spatial = (
                      2 ** (len(self.vae.config.block_out_channels) -1) if hasattr(self, "vae") and self.vae is not None else 8
                 )
